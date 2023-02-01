@@ -31,6 +31,12 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController secondController=TextEditingController();
   TextEditingController thirdController=TextEditingController();
   TextEditingController forthController=TextEditingController();
+  TextEditingController fifthController=TextEditingController();
+  TextEditingController sixthController=TextEditingController();
+  TextEditingController seventhController=TextEditingController();
+  TextEditingController eighthController=TextEditingController();
+
+
 
 
 
@@ -49,6 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String? ninthRadio='';
   String? tenthRadio='';
   String? elevenRadio='';
+  String? elevenRadio2='';
+  String? thirteenRadio='';
+
+
   String? twelveRadio='';
 
 
@@ -121,6 +131,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       CustomQuestion('Har huset stått tomt i lengre perioder? (relevant for takstmann) ?',
                         list: ['Ja','Nei', 'Vet ikke','other'],
+                        isOther: true,
+                        controller: seventhController,
                         groupVal: forthRadio, onChanged: (v){
                             setState(() {
                               forthRadio=v;
@@ -159,6 +171,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     CustomQuestion('Har huset stått tomt i lengre perioder? (relevant for takstmann) ?',
                       list: ['Ja','Nei', 'Vet ikke','other'],
                       groupVal: forthRadio2,
+                        isOther: true,
+                        controller: eighthController,
                         onChanged: (v){
                           setState(() {
                             forthRadio2=v;
@@ -230,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                     ninthRadio=='Ja'?
                     CustomQuestion('Hva ble utført?',
-                      isTextField: true,controller: firstController,desc:
+                      isTextField: true,controller: fifthController,desc:
                         'beskriv hva som ble utført på huset. '
                         ,isDescription:true)
                         :SizedBox(),
@@ -243,6 +257,32 @@ class _MyHomePageState extends State<MyHomePage> {
                               });
                             }
                         ),
+                    tenthRadio==''?SizedBox():tenthRadio=='Ja'?
+                        Column(
+                          children:[
+                            CustomQuestion('............',
+                                isTextField: true,controller: sixthController,desc:
+                                '.....................'
+                                ,isDescription:true),
+
+                            CustomQuestion('.................',
+                                list: ['Ja','Nei', 'Vet ikke'],
+                                groupVal: thirteenRadio,onChanged: (v){
+                                  setState(() {
+                                    thirteenRadio=v;
+                                  });
+                                }),
+
+                          ]
+                        ):
+                    CustomQuestion('.................',
+                        list: ['Ja','Nei', 'Vet ikke'],
+                        groupVal: elevenRadio2,onChanged: (v){
+                          setState(() {
+                            elevenRadio2=v;
+                          });
+                        }),
+
                       ],),
                   //forthSection
                   CustomQuestion('Trenger du rådgiver?',
@@ -273,7 +313,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class CustomQuestion extends StatefulWidget {
    CustomQuestion(this.question,{Key? key,this.isTextField=false,
-    this.controller,this.desc,this.list,this.groupVal,this.isDescription=false,this.onChanged}) : super(key: key);
+    this.controller,this.desc,this.list,this.groupVal,this.isDescription=false,
+     this.onChanged,this.isOther=false}) : super(key: key);
 final String question;
    String? hintText;
     String? desc;
@@ -282,10 +323,10 @@ final String question;
    String? groupVal;
 
    final bool isDescription;
-
-  final bool isTextField;
-final TextEditingController? controller;
-var onChanged;
+   final bool isOther;
+   final bool isTextField;
+  final TextEditingController? controller;
+  var onChanged;
 
   @override
   State<CustomQuestion> createState() => _CustomQuestionState();
@@ -308,8 +349,9 @@ class _CustomQuestionState extends State<CustomQuestion> {
 
           ],
         ),
-        widget.isTextField?TextFormField(
-          decoration: InputDecoration(
+        widget.isTextField?
+    TextFormField(
+          decoration: const InputDecoration(
             hintText: 'Enter Answer',
             border: OutlineInputBorder(
               borderSide: BorderSide(color:Colors.grey, width: 2.0,),
@@ -323,24 +365,47 @@ class _CustomQuestionState extends State<CustomQuestion> {
             Container(
               height: 50*double.parse(widget.list!.length.toString()),
               child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount:widget.list!.length ,
                 itemBuilder: (context,index)=>
 
-                    RadioListTile(
-                      title:Text(widget.list![index],),
-                    value: widget.list![index],
-                    groupValue: widget.groupVal,
-                    onChanged: widget.onChanged
-                    //     (v){
-                    //  // setState(() {
-                    //     widget.groupVal=v;
-                    //     MainBloc.get(context).getChanged(v,
-                    //         widget.groupVal);
-                    //  // });
-                    //   print('${widget.groupVal} is ');
-                    // },
+                    Container(
+                      height: 40,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: RadioListTile(
+                              title:Text(widget.list![index],),
+                            value: widget.list![index],
+                            groupValue: widget.groupVal,
+                            onChanged: widget.onChanged
+                            //     (v){
+                            //  // setState(() {
+                            //     widget.groupVal=v;
+                            //     MainBloc.get(context).getChanged(v,
+                            //         widget.groupVal);
+                            //  // });
+                            //   print('${widget.groupVal} is ');
+                            // },
+                            ),
+                          ),
+                          widget.isOther&&index==3?
+                            Expanded(
+                              child: TextFormField(
+                              decoration: const InputDecoration(
+                              hintText: 'Other',
+                              border: OutlineInputBorder(
+                              borderSide: BorderSide(color:Colors.grey, width: 2.0,),
+
+                              ) ,
+                              ),
+                              controller: widget.controller,
+                              ),
+                            ):SizedBox(),
+                        ],
+                      ),
                     ),
                     ),
             ),
