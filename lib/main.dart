@@ -376,8 +376,10 @@ class _CustomQuestionState extends State<CustomQuestion> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Expanded(
+                            flex: 1,
                             child: RadioListTile(
-                              title:Text(widget.list![index],),
+                              title:widget.isOther&&index==3?Text(''):
+                              Text(widget.list![index],),
                             value: widget.list![index],
                             groupValue: widget.groupVal,
                             onChanged: widget.onChanged
@@ -393,6 +395,7 @@ class _CustomQuestionState extends State<CustomQuestion> {
                           ),
                           widget.isOther&&index==3?
                             Expanded(
+                              flex: 2,
                               child: TextFormField(
                               decoration: const InputDecoration(
                               hintText: 'Other',
@@ -404,6 +407,9 @@ class _CustomQuestionState extends State<CustomQuestion> {
                               controller: widget.controller,
                               ),
                             ):SizedBox(),
+                          widget.isOther&&index==3?
+                          Expanded(flex: 2,
+                              child: SizedBox()):SizedBox(),
                         ],
                       ),
                     ),
